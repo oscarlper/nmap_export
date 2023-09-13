@@ -1,6 +1,6 @@
 #!/bin/bash
 
-figlet -f slant "nmap XML" 
+figlet -f slant "nmapExport.XML" -w 100
 
 date=$(date -d "$D" '+%Y_%m')
 nmap_params="-sC -O -sC --open"
