@@ -5,10 +5,13 @@ figlet -f slant "nmapExport.XML" -w 100
 date=$(date -d "$D" '+%Y_%m')
 nmap_params="-sC -O -sC --open"
 nmap_bin="grc -c grc.conf nmap"
+red='\033[0;41m'
 green='\033[0;32m'
-nc='\033[0m'
+nc='\033[0;0m'
 
 folder=output
+
+message_error="${red}\nSintax: sudo nmapexport -t tenant -p protocol [ tcp / udp or both ] -l ip_list_filename.txt${nc}"
 
 trap_ctrlc()
 {
@@ -35,17 +38,23 @@ do
     esac
 done
 
-if [ -z $tenant ] || [ -z $ip_list ] || [ -z $proto ]; then
-	echo "Sintax: sudo nmap_script -t tenant -p protocol [ tcp / udp or both ] -l ip_list_filename.txt"
+if [ -z $tenant ] || [ -z $ip_list ]; then
+	echo -e $message_error
 	exit 1
 fi
 
-echo "Nmap parameters: ${nmap_params}"
-echo "Protocol: ${proto}"
+if [ $proto != "tcp" ] && [ $proto != "udp" ] && [ $proto != "both" ];then
+	echo -e $message_error
+	echo -e "Error in protocol: tcp or udp or both, check sintax !!!"
+	exit 1
+fi
+
+echo -e "\nNmap parameters: ${green}${nmap_params}${nc}"
+echo -e "Protocol: ${green}${proto}${nc}"
 echo -n "Host List: "
 
 while read host_ip; do
-	echo -n "${host_ip}, "
+	echo -ne "${green}${host_ip}, ${nc}"
 done <$ip_list
 
 echo -e "\n"
@@ -76,9 +85,4 @@ if [ $proto == "tcp" ] || [ $proto == "both" ]; then
 		 echo -e "\nRun scan for Tenant: ${green}$tenant${nc} | Protocol: ${green}TCP${nc} | Host: ${green}$host_ip${nc}"
                  ${nmap_bin} ${nmap_params} ${host_ip} -oX ${folder}/${tenant}_${date}_${protocol}_${host_ip}.xml
          done <$ip_list
-
-else 
-
-	echo -e "\nError in protocol: tcp or udp or both, check sintax !!!"
-	exit 1
 fi
