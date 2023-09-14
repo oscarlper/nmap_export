@@ -66,9 +66,6 @@ if [ $proto == "udp" ] || [ $proto == "both" ]; then
                  echo -e "\nRun scan for Tenant: ${green}$tenant${nc} | Protocol: ${green}UDP${nc} | Host: ${green}$host_ip${nc}"
                  ${nmap_bin} -sU ${nmap_params} ${host_ip} -oX ${folder}/${tenant}_${date}_${protocol}_${host_ip}.xml
          done <$ip_list
-else
-         echo -e "\nError in protocol: tcp or udp or both, check sintax !!!"
-         exit 1
 fi
 
 if [ $proto == "tcp" ] || [ $proto == "both" ]; then
