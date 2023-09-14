@@ -2,14 +2,18 @@
 
 date=$(date -d "$D" '+%Y_%m')
 nmap_params="-sC -O -sC --open"
-nmap_bin="grc -c grc.conf nmap"
 red='\033[0;41m'
 green='\033[0;32m'
 nc='\033[0;0m'
-
 folder=output
-
 message_error="${red}\nSintax: sudo nmapexport -t tenant -p protocol [ tcp / udp or both ] -l ip_list_filename.txt${nc}"
+
+if command -v grc &> /dev/null
+then
+	nmap_bin="grc -c grc.conf nmap"
+else
+	nmap_bin="nmap"
+fi
 
 if command -v figlet &> /dev/null
 then
