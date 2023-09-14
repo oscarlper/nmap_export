@@ -1,7 +1,5 @@
 #!/bin/bash
 
-figlet -f slant "nmapExport.XML" -w 100
-
 date=$(date -d "$D" '+%Y_%m')
 nmap_params="-sC -O -sC --open"
 nmap_bin="grc -c grc.conf nmap"
@@ -12,6 +10,13 @@ nc='\033[0;0m'
 folder=output
 
 message_error="${red}\nSintax: sudo nmapexport -t tenant -p protocol [ tcp / udp or both ] -l ip_list_filename.txt${nc}"
+
+if command -v figlet &> /dev/null
+then
+	figlet -f slant "nmapExport.XML" -w 100
+else
+        echo -e "${green}\nnmapExport.XML${nc}"
+fi
 
 trap_ctrlc()
 {
